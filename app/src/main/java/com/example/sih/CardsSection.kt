@@ -94,7 +94,7 @@ fun CardsItem(
                 Icon(
                     imageVector = finance.icon,
                     contentDescription = finance.name,
-                    tint = Color.White
+                    tint = Color.Black
                 )
             }
 
