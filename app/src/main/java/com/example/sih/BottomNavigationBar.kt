@@ -30,12 +30,16 @@ import androidx.compose.material3.Text
 import com.example.sih.ui.theme.SihTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -76,35 +80,41 @@ val items = listOf(
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    NavigationBar {
-        Row(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background).align(Alignment.Bottom)
-        ) {
-            items.forEachIndexed { index, item ->
-                NavigationBarItem(
-                    selected = index == 0,
-                    onClick = {
-                        if (item.title == "Help") {
-                            navController.navigate("help")
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.title,
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = item.title,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+    NavigationBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .offset(y = 50.dp) // Move the entire NavigationBar down
+    ) {
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                selected = index == 0,
+                onClick = {
+                    if (item.title == "Help") {
+                        navController.navigate("help")
                     }
-                )
-            }
+                },
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.title,
+                        modifier = Modifier.size(24.dp), // Adjust icon size if needed
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                },
+                label = {
+                    Text(
+                        text = item.title,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 12.sp
+                    )
+                },
+                alwaysShowLabel = true
+            )
         }
     }
 }
+
+
+
 
 

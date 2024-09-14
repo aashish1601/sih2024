@@ -1,6 +1,6 @@
+
+
 package com.example.sih
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,7 +49,7 @@ val cards = listOf(
 fun CardsSection() {
     Column {
         Text(
-            text = "MAPS",
+            text = "maps",
             fontSize = 18.sp,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,

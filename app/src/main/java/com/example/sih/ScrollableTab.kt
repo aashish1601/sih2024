@@ -1,5 +1,4 @@
 package com.example.sih
-
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,58 +40,63 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sih.data.Scoll
 import com.example.sih.ui.theme.GreenStart
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.rounded.Search
 
 val scroll = listOf(
     Scoll(
         name = "Dadar",
 
 
-    ),
+        ),
 
     Scoll(
         name = "Andheri",
 
 
-    ),
+        ),
 
     Scoll(
         name = "Borivali",
 
 
-    ),
+        ),
     Scoll(
         name = "Malad",
 
 
-    ),
+        ),
     Scoll(
         name = "Kandivali",
 
 
-    ),
+        ),
     Scoll(
         name = "Vasai",
 
-    ),
+        ),
     Scoll(
         name = "Virar",
 
-    ),
+        ),
 )
 @Preview
 @Composable
 fun ScrollableTab() {
-    var isVisible by remember {
-        mutableStateOf(false)
-    }
-    var iconState by remember {
-        mutableStateOf(Icons.Rounded.KeyboardArrowUp)
-    }
+    var isVisible by remember { mutableStateOf(false) }
+    var iconState by remember { mutableStateOf(Icons.Rounded.KeyboardArrowUp) }
+
+    var searchText by remember { mutableStateOf("") } // For search input
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 32.dp),
+            .offset(y = 50.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
 
@@ -133,12 +138,11 @@ fun ScrollableTab() {
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Text(
-                    text = "Scroll",
+                    text = "Search Station",
                     fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     fontWeight = FontWeight.Bold
                 )
-
             }
 
             Spacer(
@@ -168,10 +172,26 @@ fun ScrollableTab() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        // Search Bar with Icon
+                        OutlinedTextField(
+                            value = searchText,
+                            onValueChange = { searchText = it },
+                            label = { Text("Search Station") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Rounded.Search,
+                                    contentDescription = "Search Icon"
+                                )
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
                         Row(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-
                             Text(
                                 modifier = Modifier.width(width),
                                 text = "Stations",
@@ -179,7 +199,6 @@ fun ScrollableTab() {
                                 fontSize = 16.sp,
                                 color = MaterialTheme.colorScheme.onBackground
                             )
-
 
                             Text(
                                 modifier = Modifier.width(width),
@@ -189,7 +208,6 @@ fun ScrollableTab() {
                                 color = MaterialTheme.colorScheme.onBackground,
                                 textAlign = TextAlign.End
                             )
-
 
                             Text(
                                 modifier = Modifier.width(width),
@@ -203,11 +221,19 @@ fun ScrollableTab() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        // Filtered list based on search query
+                        val filteredScroll = if (searchText.isEmpty()) {
+                            scroll // Show all stations if search is empty
+                        } else {
+                            scroll.filter { it.name.contains(searchText, ignoreCase = true) }
+                        }
+
                         LazyColumn {
-                            items(scroll.size) { index ->
+                            items(filteredScroll.size) { index ->
                                 StationItem(
                                     index = index,
-                                    width = width
+                                    width = width,
+                                    station = filteredScroll[index].name // Pass the filtered station
                                 )
                             }
                         }
@@ -216,14 +242,11 @@ fun ScrollableTab() {
                 }
             }
         }
-
     }
-
 }
 
 @Composable
-fun StationItem(index: Int, width: Dp) {
-    val stations = scroll[index]
+fun StationItem(index: Int, width: Dp, station: String) {
 
     Row(
         modifier = Modifier
@@ -231,7 +254,6 @@ fun StationItem(index: Int, width: Dp) {
             .padding(bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Row(
             modifier = Modifier.width(width),
             verticalAlignment = Alignment.CenterVertically
@@ -246,7 +268,7 @@ fun StationItem(index: Int, width: Dp) {
             Text(
                 modifier = Modifier
                     .padding(start = 10.dp),
-                text = stations.name,
+                text = station, // Use the station name passed
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -274,6 +296,5 @@ fun StationItem(index: Int, width: Dp) {
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.End
         )
-
     }
 }
